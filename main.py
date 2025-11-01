@@ -14,11 +14,15 @@ def create_app() -> FastAPI:
     application.include_router(rooms.router, prefix=settings.api_v1_prefix)
     application.include_router(bookings.router, prefix=settings.api_v1_prefix)
 
-    @application.on_event("startup")
+    @application.on_event("startup") # refactor: Criar lifespam pois esse modo esta depreciado
     def _startup() -> None:
         init_db()
 
-    @application.get("/health", tags=["Health"])  # pragma: no cover - simple endpoint
+    @application.get("/")
+    def read_root():
+        return {"message": "Hotel Management System API", "status": "online"}
+
+    @application.get("/health", tags=["Health"])
     def health_check() -> dict[str, str]:
         return {"status": "ok"}
 
@@ -28,4 +32,4 @@ def create_app() -> FastAPI:
 app = create_app()
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="localhost", port=8000)
+    uvicorn.run("main:app", host="localhost", port=8000)
