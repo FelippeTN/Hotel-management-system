@@ -10,7 +10,7 @@ class Settings:
     api_v1_prefix: str = "/api/v1"
     database_url: str = os.getenv(
         "DATABASE_URL",
-        "sqlite:///./hotel_management.db",
+        "postgresql+psycopg://postgres:1234@localhost:5432/pousada_db",
     )
 
 
