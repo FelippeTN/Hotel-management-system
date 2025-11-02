@@ -1,7 +1,7 @@
-from fastapi import FastAPI
 import uvicorn
+from fastapi import FastAPI
 
-from app.api.routes import bookings, guests, rooms
+from app.api.routes import auth, bookings, guests, rooms
 from app.core.config import get_settings
 from app.core.database import init_db
 
@@ -10,6 +10,7 @@ def create_app() -> FastAPI:
     settings = get_settings()
     application = FastAPI(title=settings.app_name, debug=settings.debug)
 
+    application.include_router(auth.router, prefix=settings.api_v1_prefix)
     application.include_router(guests.router, prefix=settings.api_v1_prefix)
     application.include_router(rooms.router, prefix=settings.api_v1_prefix)
     application.include_router(bookings.router, prefix=settings.api_v1_prefix)
