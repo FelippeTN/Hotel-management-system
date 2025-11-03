@@ -10,13 +10,27 @@ import RoomsPage from '@/pages/rooms.tsx'
 export const router = createBrowserRouter([
   {
     path: '/',
+    element: <DashboardPage />,
     errorElement: <ErrorPage />,
-    children: [
-      { index: true, element: <DashboardPage /> },
-      { path: 'auth', element: <AuthPage /> },
-      { path: 'bookings', element: <BookingsPage /> },
-      { path: 'guests', element: <GuestsPage /> },
-      { path: 'rooms', element: <RoomsPage /> },
-    ],
+  },
+  {
+    path: '/auth',
+    element: <AuthPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: '/bookings',
+    element: <BookingsPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: '/guests',
+    element: <GuestsPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: '/rooms',
+    element: <RoomsPage />,
+    errorElement: <ErrorPage />,
   },
 ])
