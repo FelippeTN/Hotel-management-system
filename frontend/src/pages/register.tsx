@@ -10,12 +10,15 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { registerUser } from "@/services/register"
+import { registerUser } from "@/services/auth"
 import { useState } from "react"
+import { useNavigate } from "react-router"
 
-const AuthPage = () => {
+const RegisterPage = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState(false)
+  const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -30,8 +33,14 @@ const AuthPage = () => {
     try {
       const user = await registerUser({ name, email, password })
       console.log("User created:", user)
+      
+      setSuccess(true)
+      
+      setTimeout(() => {
+        navigate('/login')
+      }, 1000)
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Error creating user")
+      setError(err instanceof Error ? err.message : "Erro ao criar usuário")
     } finally {
       setLoading(false)
     }
@@ -46,20 +55,33 @@ const AuthPage = () => {
             Insira seu nome e email abaixo para criar uma nova conta
           </CardDescription>
           <CardAction>
-            <Button variant="link">Sign In</Button>
+            <Button variant="link" onClick={() => navigate('/login')}>
+              Já tem conta? Entre
+            </Button>
           </CardAction>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent>
             <div className="flex flex-col gap-6">
+              {error && (
+                <div className="rounded-md bg-red-50 p-3 text-sm text-red-800 border border-red-200">
+                  {error}
+                </div>
+              )}
+              {success && (
+                <div className="rounded-md bg-green-50 p-3 text-sm text-green-800 border border-green-200">
+                  Conta criada com sucesso! Redirecionando para o login...
+                </div>
+              )}
               <div className="grid gap-2">
-                <Label htmlFor="name">Name</Label>
+                <Label htmlFor="name">Nome</Label>
                 <Input
                   id="name"
                   name="name"
                   type="text"
-                  placeholder="Your name"
+                  placeholder="Seu nome"
                   required
+                  disabled={loading || success}
                 />
               </div>
               <div className="grid gap-2">
@@ -70,20 +92,30 @@ const AuthPage = () => {
                   type="email"
                   placeholder="email@example.com"
                   required
+                  disabled={loading || success}
                 />
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-
+                  <Label htmlFor="password">Senha</Label>
                 </div>
-                <Input id="password" name="password" type="password" required />
+                <Input 
+                  id="password" 
+                  name="password" 
+                  type="password" 
+                  required 
+                  disabled={loading || success}
+                />
               </div>
             </div>
           </CardContent>
           <CardFooter className="flex-col gap-2">
-            <Button type="submit" className="w-full border mt-5">
-              Login
+            <Button 
+              type="submit" 
+              className="w-full border mt-5" 
+              disabled={loading || success}
+            >
+              {loading ? "Criando..." : success ? "Sucesso!" : "Criar conta"}
             </Button>
           </CardFooter>
         </form>
@@ -92,4 +124,4 @@ const AuthPage = () => {
   )
 }
 
-export default AuthPage
+export default RegisterPage
