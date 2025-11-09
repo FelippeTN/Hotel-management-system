@@ -30,6 +30,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { getLoggedUser } from "@/services/auth"
 
 const data = {
   user: {
@@ -149,6 +150,18 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const loggedUser = getLoggedUser()
+  
+  const user = loggedUser ? {
+    name: loggedUser.name,
+    email: loggedUser.email,
+    avatar: "/avatars/shadcn.jpg",
+  } : {
+    name: "Usuário",
+    email: "email@example.com",
+    avatar: "/avatars/shadcn.jpg",
+  }
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -172,7 +185,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user} />
       </SidebarFooter>
     </Sidebar>
   )

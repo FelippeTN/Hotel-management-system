@@ -53,3 +53,19 @@ export async function loginUser(email: string, password: string): Promise<LoginR
   
   return response.json()
 }
+
+export function getLoggedUser(): UserRead | null {
+  const userJson = localStorage.getItem('user')
+  if (!userJson) return null
+  
+  try {
+    return JSON.parse(userJson) as UserRead
+  } catch {
+    return null
+  }
+}
+
+export function logout(): void {
+  localStorage.removeItem('token')
+  localStorage.removeItem('user')
+}

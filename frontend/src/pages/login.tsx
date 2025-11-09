@@ -34,6 +34,7 @@ const LoginPage = () => {
       
       if (response.access_token) {
         localStorage.setItem('token', response.access_token)
+        localStorage.setItem('user', JSON.stringify(response.user))
         
         const from = (location.state as any)?.from?.pathname || '/'
         navigate(from, { replace: true })
